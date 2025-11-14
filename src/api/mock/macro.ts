@@ -1,0 +1,68 @@
+import { MacroIndicator } from "@/types/market";
+
+export const mockMacroIndicators: MacroIndicator[] = [
+  {
+    name: "RBI Repo Rate",
+    value: 6.5,
+    change: 0,
+    changePercent: 0,
+    unit: "%",
+    asOf: "2024-12-06",
+  },
+  {
+    name: "India CPI (YoY)",
+    value: 5.49,
+    change: 0.18,
+    changePercent: 3.39,
+    unit: "%",
+    asOf: "2024-10-31",
+  },
+  {
+    name: "India WPI (YoY)",
+    value: 2.36,
+    change: -0.52,
+    changePercent: -18.06,
+    unit: "%",
+    asOf: "2024-10-31",
+  },
+  {
+    name: "USD/INR",
+    value: 83.42,
+    change: 0.15,
+    changePercent: 0.18,
+    unit: "₹",
+    asOf: "2024-12-06",
+  },
+  {
+    name: "Crude Oil (Brent)",
+    value: 76.25,
+    change: -1.80,
+    changePercent: -2.31,
+    unit: "$/bbl",
+    asOf: "2024-12-06",
+  },
+  {
+    name: "Gold (MCX)",
+    value: 62450,
+    change: 320,
+    changePercent: 0.52,
+    unit: "₹/10g",
+    asOf: "2024-12-06",
+  },
+  {
+    name: "FPI Equity (Monthly)",
+    value: -8500,
+    change: -2100,
+    changePercent: -32.81,
+    unit: "₹ Cr",
+    asOf: "2024-11-30",
+  },
+  {
+    name: "India GDP Growth (QoQ)",
+    value: 7.6,
+    change: 0.8,
+    changePercent: 11.76,
+    unit: "%",
+    asOf: "2024-09-30",
+  },
+];
