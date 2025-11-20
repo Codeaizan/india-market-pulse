@@ -167,8 +167,14 @@ const UpstoxAuth = () => {
               <li>Go to <a href="https://upstox.com/developer/apps" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Upstox Developer Console</a></li>
               <li>Create a new app or select an existing one</li>
               <li>Set the Redirect URI to: <code className="bg-muted px-2 py-1 rounded">{redirectUri}</code></li>
-              <li>Copy your Client ID and Client Secret</li>
-              <li>Add them as secrets in Lovable Cloud (UPSTOX_CLIENT_ID, UPSTOX_CLIENT_SECRET, UPSTOX_REDIRECT_URI)</li>
+              <li>Copy your <strong>API Key</strong> (this is the Client ID) and <strong>API Secret</strong> (this is the Client Secret)</li>
+              <li>Add them as secrets in Lovable Cloud:
+                <ul className="list-disc list-inside ml-4 mt-1">
+                  <li>UPSTOX_CLIENT_ID = Your API Key</li>
+                  <li>UPSTOX_CLIENT_SECRET = Your API Secret</li>
+                  <li>UPSTOX_REDIRECT_URI = {redirectUri}</li>
+                </ul>
+              </li>
             </ol>
           </div>
         </MotionCard>
