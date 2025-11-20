@@ -1,13 +1,79 @@
 import { motion } from "framer-motion";
 import { MotionCard } from "@/components/MotionCard";
 import { mockIndices, mockTickers } from "@/api/mock/tickers";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
 import { motionTheme } from "@/lib/motion-theme";
 import { SearchBar } from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
+import { useUpstoxQuotes } from "@/hooks/useUpstoxQuotes";
+import { getUpstoxSymbols } from "@/api/upstoxInstruments";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const Overview = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // Fetch real-time quotes for indices
+  const indicesSymbols = ['NIFTY50', 'BANKNIFTY', 'SENSEX'];
+  const { data: indicesData, isLoading: indicesLoading, error: indicesError } = useUpstoxQuotes(
+    getUpstoxSymbols(indicesSymbols)
+  );
+
+  // Fetch real-time quotes for stocks
+  const stockSymbols = mockTickers.slice(0, 6).map(t => t.symbol);
+  const { data: stocksData, isLoading: stocksLoading, error: stocksError } = useUpstoxQuotes(
+    getUpstoxSymbols(stockSymbols)
+  );
+
+  useEffect(() => {
+    if (indicesError) {
+      toast({
+        title: "Error fetching indices data",
+        description: "Using demo data. Check your Upstox API key.",
+        variant: "destructive",
+      });
+    }
+    if (stocksError) {
+      toast({
+        title: "Error fetching stocks data", 
+        description: "Using demo data. Check your Upstox API key.",
+        variant: "destructive",
+      });
+    }
+  }, [indicesError, stocksError, toast]);
+
+  // Helper to get real-time price data or fallback to mock
+  const getIndexData = (name: string) => {
+    if (indicesData?.data) {
+      const upstoxKey = getUpstoxSymbols([name])[0];
+      const quote = indicesData.data[upstoxKey];
+      if (quote) {
+        const lastPrice = quote.last_price || mockIndices[name as keyof typeof mockIndices].value;
+        const change = quote.net_change || mockIndices[name as keyof typeof mockIndices].change;
+        const changePercent = ((change / (lastPrice - change)) * 100);
+        return { value: lastPrice, change, changePercent };
+      }
+    }
+    return mockIndices[name as keyof typeof mockIndices];
+  };
+
+  const getStockData = (symbol: string) => {
+    if (stocksData?.data) {
+      const upstoxKey = getUpstoxSymbols([symbol])[0];
+      const quote = stocksData.data[upstoxKey];
+      if (quote) {
+        const ticker = mockTickers.find(t => t.symbol === symbol)!;
+        return {
+          ...ticker,
+          currentPrice: quote.last_price || ticker.currentPrice,
+          change: quote.net_change || ticker.change,
+          changePercent: ((quote.net_change / (quote.last_price - quote.net_change)) * 100) || ticker.changePercent,
+        };
+      }
+    }
+    return mockTickers.find(t => t.symbol === symbol)!;
+  };
 
   return (
     <motion.div
@@ -23,7 +89,12 @@ const Overview = () => {
         >
           Market Overview
         </motion.h1>
-        <SearchBar />
+        <div className="flex items-center gap-4">
+          {(indicesLoading || stocksLoading) && (
+            <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+          <SearchBar />
+        </div>
       </div>
 
       {/* Indices */}
@@ -31,7 +102,9 @@ const Overview = () => {
         variants={motionTheme.variants.fadeIn}
         className="grid gap-4 md:grid-cols-3"
       >
-        {Object.entries(mockIndices).map(([name, data]) => (
+        {indicesSymbols.map((name) => {
+          const data = getIndexData(name);
+          return (
           <MotionCard key={name}>
             <div className="p-6">
               <div className="text-sm text-muted-foreground">{name}</div>
@@ -61,7 +134,8 @@ const Overview = () => {
               </div>
             </div>
           </MotionCard>
-        ))}
+        );
+        })}
       </motion.div>
 
       {/* Sector Heatmap */}
@@ -106,7 +180,9 @@ const Overview = () => {
         <MotionCard>
           <div className="p-6">
             <div className="space-y-3">
-              {mockTickers.slice(0, 6).map((ticker) => (
+              {stockSymbols.map((symbol) => {
+                const ticker = getStockData(symbol);
+                return (
                 <button
                   key={ticker.symbol}
                   onClick={() => navigate(`/ticker/${ticker.symbol}`)}
@@ -134,7 +210,8 @@ const Overview = () => {
                     </div>
                   </div>
                 </button>
-              ))}
+              );
+              })}
             </div>
           </div>
         </MotionCard>
