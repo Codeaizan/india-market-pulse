@@ -4,8 +4,13 @@ import { motionTheme } from "@/lib/motion-theme";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       initial="initial"
@@ -91,27 +96,27 @@ const Settings = () => {
       </motion.div>
 
       <motion.div variants={motionTheme.variants.fadeIn}>
-        <h2 className="mb-4 text-xl font-semibold">API Configuration</h2>
+        <h2 className="mb-4 text-xl font-semibold">Upstox Integration</h2>
         <MotionCard>
-          <div className="p-6">
-            <div className="space-y-4">
-              <div>
-                <Label>API Keys</Label>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Configure your API keys for real-time data sources. Keys are encrypted and stored securely.
-                </p>
-              </div>
-              <Separator />
-              <div className="text-sm text-muted-foreground">
-                <strong>Supported Sources:</strong>
-                <ul className="mt-2 space-y-1 ml-4 list-disc">
-                  <li>NSE/BSE Official APIs</li>
-                  <li>RBI DBIE (Database on Indian Economy)</li>
-                  <li>MOSPI (Ministry of Statistics)</li>
-                  <li>MCA (Ministry of Corporate Affairs)</li>
-                  <li>GDELT Project (News)</li>
-                </ul>
-              </div>
+          <div className="p-6 space-y-4">
+            <div>
+              <Label>Upstox API Authentication</Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Connect your Upstox account to access real-time market data for NSE/BSE stocks and indices.
+              </p>
+            </div>
+            <Separator />
+            <Button onClick={() => navigate('/upstox-auth')} className="w-full">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Authenticate with Upstox
+            </Button>
+            <div className="text-sm text-muted-foreground">
+              <strong>Note:</strong> You'll need:
+              <ul className="mt-2 space-y-1 ml-4 list-disc">
+                <li>An active Upstox account</li>
+                <li>API access enabled in Upstox Developer Console</li>
+                <li>Client ID, Secret, and Redirect URI configured in Lovable Cloud</li>
+              </ul>
             </div>
           </div>
         </MotionCard>

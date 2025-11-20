@@ -14,6 +14,7 @@ import NewsSentiment from "./pages/NewsSentiment";
 import Watchlist from "./pages/Watchlist";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import UpstoxAuth from "./pages/UpstoxAuth";
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const App = () => {
                     <Route path="/macro" element={<MacroDashboard />} />
                     <Route path="/watchlist" element={<Watchlist />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/upstox-auth" element={<UpstoxAuth />} />
                     <Route path="/animations" element={<div className="text-center text-muted-foreground">Animations Demo - Coming Soon</div>} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
